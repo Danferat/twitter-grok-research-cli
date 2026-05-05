@@ -18,3 +18,7 @@
 - Grok-only поиск ограничен только `x_search`: `web_search` больше не передаётся в xAI payload, а ответы с `web_search_calls > 0` или `x_search_calls == 0` отклоняются.
 - Для `grok-search` добавлен переключатель `--model` с моделями `grok-4.20-0309-reasoning`, `grok-4.20-0309-non-reasoning`, `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`; дефолт обновлён на `grok-4.20-0309-reasoning`.
 - Для интерактивного `grok-search` без `--model` добавлен выбор Grok-модели по номеру; в неинтерактивном запуске сохраняется fallback на `XAI_MODEL`.
+
+## 2026-05-05
+
+- Добавлен `scripts/install_for_agent.sh` для one-command установки: создаёт `.venv`, подготавливает `.env`, запускает тесты и показывает, куда вставить ключи `X_BEARER_TOKEN` и `XAI_API_KEY`.

@@ -17,6 +17,20 @@
 
 ## Setup
 
+Самая простая установка для агента или нового пользователя:
+
+```bash
+git clone https://github.com/Danferat/twitter-grok-research-cli.git && cd twitter-grok-research-cli && bash scripts/install_for_agent.sh
+```
+
+Скрипт создаст локальное окружение `.venv`, подготовит `.env` из `.env.example`, прогонит тесты и покажет, куда вставить ключи.
+
+Если репозиторий уже скачан, запустите из корня проекта:
+
+```bash
+bash scripts/install_for_agent.sh
+```
+
 1. Создайте локальный файл `.env`:
 
 ```bash
@@ -204,6 +218,7 @@ python3 -m twitter_research grok-search "что сейчас пишут про P
 - `twitter_research/storage.py` - сохранение и чтение JSON-запусков
 - `twitter_research/cli.py` - команды `grok-search`, `twitter-search`, `ask`, `plan-query`, `search` и `show latest`; интерактивный выбор Grok-модели для `grok-search`
 - `twitter_research/__main__.py` - запуск через `python3 -m twitter_research`
+- `scripts/install_for_agent.sh` - one-command установка для агента: создаёт `.venv`, `.env`, запускает тесты и показывает, куда вставить ключи
 - `tests/` - unit-тесты
 - `data/runs/` - локальные результаты поиска
 - `docs/agent-integration-guide.md` - краткий гайд для подключения проекта к Codex, Claude или другому локальному агенту

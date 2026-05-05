@@ -1,0 +1,20 @@
+# Memory
+
+## 2026-04-29
+
+- Создан локальный Python CLI для поиска через X/Twitter API v2 с bearer token.
+- Добавлена команда `search`, которая сохраняет структурированный JSON-запуск в `data/runs/`.
+- Добавлена команда `show latest`, которая показывает последний сохранённый запуск и список твитов.
+- CLI использует recent search для периода до 7 дней и full-archive search для периода больше 7 дней в режиме `auto`.
+- Добавлена команда `plan-query`, которая превращает обычный вопрос в предложенный X/Twitter search query, период и лимит без обращения к API.
+- Добавлен `CODEX.md` с правилами, по которым Codex должен планировать X-запросы, запускать CLI и отвечать по сохранённым результатам.
+- Добавлена гибридная схема работы: основной сценарий через Codex-чат end-to-end и терминальный fallback `ask`, который одной командой планирует query, ищет, сохраняет JSON и показывает краткую сводку.
+
+## 2026-04-30
+
+- Добавлена интеграция Grok через xAI API: `XAI_API_KEY`, `XAI_MODEL`, клиент `twitter_research/grok_client.py`.
+- Режимы поиска разделены на два независимых сценария: `grok-search` использует только xAI/Grok API search tools, `twitter-search` использует только X/Twitter API.
+- Смешанные сценарии Grok-поверх-Twitter убраны из актуального CLI-интерфейса, чтобы Grok-only и Twitter-only не пересекались.
+- Grok-only поиск ограничен только `x_search`: `web_search` больше не передаётся в xAI payload, а ответы с `web_search_calls > 0` или `x_search_calls == 0` отклоняются.
+- Для `grok-search` добавлен переключатель `--model` с моделями `grok-4.20-0309-reasoning`, `grok-4.20-0309-non-reasoning`, `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`; дефолт обновлён на `grok-4.20-0309-reasoning`.
+- Для интерактивного `grok-search` без `--model` добавлен выбор Grok-модели по номеру; в неинтерактивном запуске сохраняется fallback на `XAI_MODEL`.

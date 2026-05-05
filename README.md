@@ -76,6 +76,33 @@ Codex должен сам:
 
 Правила для этого сценария лежат в `CODEX.md`.
 
+## Claude Integration
+
+Для Claude Project Instructions или system prompt можно использовать этот блок:
+
+```text
+You have access to a local Twitter/Grok research CLI project at:
+<PROJECT_ROOT>
+
+Use it whenever the user explicitly asks to search through Twitter/X or Grok.
+
+For Twitter/X requests, run the project from its root:
+1. `python3 -m twitter_research plan-query "USER QUESTION"`
+2. `python3 -m twitter_research twitter-search "PLANNED QUERY" --days DAYS --limit LIMIT`
+3. Read the newest JSON from `data/runs/`
+4. Summarize tweet narratives and clearly label inference.
+
+For Grok requests, run:
+`python3 -m twitter_research grok-search "USER QUESTION" --model MODEL`
+
+Keep modes isolated:
+- Twitter-only never calls Grok.
+- Grok-only never calls Twitter API.
+- Grok-only never uses web search unless the user explicitly requests web verification.
+```
+
+`<PROJECT_ROOT>` - путь к папке, куда установлен или склонирован этот репозиторий. Claude должен иметь разрешение на локальный shell/tool use. Если shell недоступен, используйте CLI вручную и передавайте Claude сохранённый JSON из `data/runs/` для анализа.
+
 ## Terminal Usage
 
 Запасной терминальный сценарий одной командой:

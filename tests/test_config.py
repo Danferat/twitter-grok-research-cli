@@ -28,7 +28,7 @@ class ConfigTests(unittest.TestCase):
 
             self.assertEqual(config.bearer_token, "shell-token")
 
-    def test_loads_optional_xai_settings(self):
+    def test_loads_optional_xai_api_key_without_model_setting(self):
         with tempfile.TemporaryDirectory() as tmp:
             env_path = Path(tmp) / ".env"
             env_path.write_text(
@@ -41,7 +41,7 @@ class ConfigTests(unittest.TestCase):
             config = load_config(env_path=env_path, environ={})
 
             self.assertEqual(config.xai_api_key, "xai-token")
-            self.assertEqual(config.xai_model, "grok-test-model")
+            self.assertFalse(hasattr(config, "xai_model"))
 
     def test_missing_token_raises_clear_error(self):
         with self.assertRaises(ConfigError) as ctx:

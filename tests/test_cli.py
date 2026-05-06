@@ -114,7 +114,7 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             runs_dir = Path(tmp) / "runs"
             env_path = Path(tmp) / ".env"
-            env_path.write_text("XAI_API_KEY=xai-token\nXAI_MODEL=grok-test-model\n", encoding="utf-8")
+            env_path.write_text("XAI_API_KEY=xai-token\n", encoding="utf-8")
 
             out = io.StringIO()
             with (
@@ -130,6 +130,8 @@ class CliTests(unittest.TestCase):
                         str(runs_dir),
                         "grok-search",
                         "что пишут про PUMP token?",
+                        "--model",
+                        "grok-4.20-0309-reasoning",
                     ]
                 )
 
@@ -139,7 +141,7 @@ class CliTests(unittest.TestCase):
             self.assertIn("grok-only answer", out.getvalue())
             self.assertEqual(len(list(runs_dir.glob("*.json"))), 1)
 
-    def test_grok_search_model_argument_overrides_env_model(self):
+    def test_grok_search_model_argument_selects_model(self):
         created_clients = []
 
         class FakeGrokClient:
@@ -158,10 +160,7 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             runs_dir = Path(tmp) / "runs"
             env_path = Path(tmp) / ".env"
-            env_path.write_text(
-                "XAI_API_KEY=xai-token\nXAI_MODEL=grok-4.20-0309-reasoning\n",
-                encoding="utf-8",
-            )
+            env_path.write_text("XAI_API_KEY=xai-token\n", encoding="utf-8")
 
             out = io.StringIO()
             with patch("twitter_research.cli.GrokClient", FakeGrokClient), redirect_stdout(out):
@@ -207,7 +206,7 @@ class CliTests(unittest.TestCase):
             runs_dir = Path(tmp) / "runs"
             env_path = Path(tmp) / ".env"
             env_path.write_text(
-                "XAI_API_KEY=xai-token\nXAI_MODEL=grok-4.20-0309-reasoning\n",
+                "XAI_API_KEY=xai-token\nXAI_MODEL=grok-4.20-0309-non-reasoning\n",
                 encoding="utf-8",
             )
 
@@ -234,7 +233,7 @@ class CliTests(unittest.TestCase):
             saved = next(runs_dir.glob("*.json")).read_text(encoding="utf-8")
             self.assertIn('"model": "grok-4-1-fast-reasoning"', saved)
 
-    def test_grok_search_uses_env_model_without_prompt_when_noninteractive(self):
+    def test_grok_search_requires_model_choice_when_noninteractive(self):
         created_clients = []
 
         class NonInteractiveInput(io.StringIO):
@@ -279,9 +278,10 @@ class CliTests(unittest.TestCase):
                     ]
                 )
 
-            self.assertEqual(code, 0)
-            self.assertEqual(created_clients[0].model, "grok-4.20-0309-non-reasoning")
+            self.assertEqual(code, 1)
+            self.assertEqual(created_clients, [])
             self.assertNotIn("Какую модель Grok использовать?", out.getvalue())
+            self.assertEqual(len(list(runs_dir.glob("*.json"))), 0)
 
     def test_twitter_search_alias_uses_only_twitter_client(self):
         class FakeClient:

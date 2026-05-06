@@ -18,7 +18,6 @@ python3 -m twitter_research --help
 ```text
 X_BEARER_TOKEN=...
 XAI_API_KEY=...
-XAI_MODEL=grok-4.20-0309-reasoning
 ```
 
 ## 2. Правило выбора режима

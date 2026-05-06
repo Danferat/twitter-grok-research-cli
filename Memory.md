@@ -12,12 +12,17 @@
 
 ## 2026-04-30
 
-- Добавлена интеграция Grok через xAI API: `XAI_API_KEY`, `XAI_MODEL`, клиент `twitter_research/grok_client.py`.
+- Добавлена интеграция Grok через xAI API: `XAI_API_KEY`, клиент `twitter_research/grok_client.py`.
 - Режимы поиска разделены на два независимых сценария: `grok-search` использует только xAI/Grok API search tools, `twitter-search` использует только X/Twitter API.
 - Смешанные сценарии Grok-поверх-Twitter убраны из актуального CLI-интерфейса, чтобы Grok-only и Twitter-only не пересекались.
 - Grok-only поиск ограничен только `x_search`: `web_search` больше не передаётся в xAI payload, а ответы с `web_search_calls > 0` или `x_search_calls == 0` отклоняются.
 - Для `grok-search` добавлен переключатель `--model` с моделями `grok-4.20-0309-reasoning`, `grok-4.20-0309-non-reasoning`, `grok-4-1-fast-reasoning`, `grok-4-1-fast-non-reasoning`; дефолт обновлён на `grok-4.20-0309-reasoning`.
-- Для интерактивного `grok-search` без `--model` добавлен выбор Grok-модели по номеру; в неинтерактивном запуске сохраняется fallback на `XAI_MODEL`.
+- Для интерактивного `grok-search` без `--model` добавлен выбор Grok-модели по номеру; в неинтерактивном запуске требуется `--model`.
+
+## 2026-05-06
+
+- Убран режим выбора Grok-модели через `XAI_MODEL` в `.env`: конфиг больше не читает модель из окружения.
+- `grok-search` теперь каждый раз требует выбор модели: интерактивно через список или явно через `--model` для неинтерактивных запусков.
 
 ## 2026-05-05
 

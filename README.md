@@ -11,7 +11,7 @@
 - Language: Python 3
 - Frameworks: нет
 - Databases: нет, результаты сохраняются как JSON-файлы
-- Working models: Grok через xAI API (`XAI_MODEL`, по умолчанию `grok-4.20-0309-reasoning`) для Grok-only поиска только через `x_search`; Codex анализирует сохранённые Twitter-only результаты
+- Working models: Grok через xAI API для Grok-only поиска только через `x_search`; модель каждый раз выбирается интерактивно или через `--model`; Codex анализирует сохранённые Twitter-only результаты
 - Main services: X/Twitter API v2, xAI API
 - Bots/usernames: нет
 
@@ -42,10 +42,9 @@ cp .env.example .env
 ```text
 X_BEARER_TOKEN=ваш_токен
 XAI_API_KEY=ваш_xai_ключ
-XAI_MODEL=grok-4.20-0309-reasoning
 ```
 
-`X_BEARER_TOKEN` нужен только для Twitter-only поиска. `XAI_API_KEY` нужен только для Grok-only поиска.
+`X_BEARER_TOKEN` нужен только для Twitter-only поиска. `XAI_API_KEY` нужен только для Grok-only поиска. Модель Grok не задаётся в `.env`: её нужно выбирать при формировании каждого Grok-запроса.
 
 Поддерживаемые модели для Grok-only поиска:
 
@@ -137,7 +136,7 @@ Grok-only поиск только внутри X/Twitter через Grok `x_sear
 python3 -m twitter_research grok-search "что сейчас пишут про PUMP token?"
 ```
 
-В интерактивном терминале команда без `--model` покажет список моделей и попросит ввести номер. В неинтерактивном запуске используется `XAI_MODEL` из `.env`.
+В интерактивном терминале команда без `--model` покажет список моделей и попросит ввести номер. В неинтерактивном запуске нужно передать `--model`; модель из `.env` больше не используется.
 
 Выбрать модель на один запуск:
 

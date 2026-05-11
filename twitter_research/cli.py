@@ -61,7 +61,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--model",
         choices=GROK_MODELS,
         default=None,
-        help="Grok model to use for this search. Defaults to XAI_MODEL or the project default.",
+        help="Grok model to use for this search. Required for non-interactive runs.",
     )
 
     plan = subparsers.add_parser("plan-query", help="Transform a natural question into a suggested X search.")
@@ -138,7 +138,7 @@ def _twitter_search(args: argparse.Namespace, runs_dir: Path, label: str = "Twit
 
 def _grok_search(args: argparse.Namespace, runs_dir: Path) -> int:
     config = load_config(env_path=args.env_file, require_bearer=False)
-    selected_model = _select_grok_model(args.model, config.xai_model)
+    selected_model = _select_grok_model(args.model)
     client = GrokClient(api_key=config.xai_api_key, model=selected_model)
     result = client.search(args.question, max_search_results=args.max_search_results)
     run_path = save_run(
@@ -168,11 +168,11 @@ def _grok_search(args: argparse.Namespace, runs_dir: Path) -> int:
     return 0
 
 
-def _select_grok_model(explicit_model: str | None, default_model: str) -> str:
+def _select_grok_model(explicit_model: str | None) -> str:
     if explicit_model:
         return explicit_model
     if not sys.stdin.isatty():
-        return default_model
+        raise ValueError("Choose a Grok model with --model for non-interactive runs.")
 
     print("Какую модель Grok использовать?")
     print("")
